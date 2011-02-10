@@ -24,7 +24,7 @@ for i in $@; do
         # Validate variable
         if [ $ver ]; then
                 # Reinstall if old
-                if [ $(grep $i-$ver $modlist 2>/dev/null) ]; then
+                if [ $(grep -w $i-$ver $modlist 2>/dev/null) ]; then
                         echo "$(grep -w $i-$ver $modlist) found, updating."
                         drush dl $(grep -w $i-$ver $modlist)
                 else
