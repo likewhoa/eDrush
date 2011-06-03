@@ -26,7 +26,7 @@ for i in $@; do
                 # Reinstall if old
                 if [ $(grep -w $i-$ver $modlist 2>/dev/null) ]; then
                         echo "$(grep -w $i-$ver $modlist) found, updating."
-                        drush dl $(grep -w $i-$ver $modlist)
+                        drush -y dl $(grep -w $i-$ver $modlist)
                 else
                         echo "Installing $i-$ver"
                         drush dl $i-$ver && echo $i-$ver>>$modlist
