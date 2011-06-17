@@ -19,35 +19,34 @@ fi
 # Main loop
 for i in $@; do
         # Find the -dev if not then just download the top release version.
-        ver=$(drush pm-releases $i | grep dev | head -n1 | awk '{print$1}')
+        ver=$(drush rl $i | grep dev | head -n1 | awk '{print$1}')
 
-        # Validate variable
+	# Validate variable
         if [ $ver ]; then
-                # Reinstall if old
-                if [ $(grep -w $i-$ver $modlist 2>/dev/null) ]; then
-                        echo "$(grep -w $i-$ver $modlist) found, updating."
-                        drush -y dl $(grep -w $i-$ver $modlist)
-                else
-                        echo "Installing $i-$ver"
-                        drush dl $i-$ver && echo $i-$ver>>$modlist
-                        drush_en
-                fi
+               	# Reinstall if old
+               	if [ $(grep -w $i-$ver $modlist 2>/dev/null) ]; then
+                       	echo "$(grep -w $i-$ver $modlist) found, updating."
+                       	drush -y dl $(grep -w $i-$ver $modlist)
+               	else
+                       	echo "Installing $i-$ver"
+                       	drush dl $i-$ver && echo $i-$ver>>$modlist
+                       	drush_en
+               	fi
         else
-                # Check if versioned
-                if [[ $i =~ $i-* ]]; then 
-                        echo "Installing $i"
-                        drush dl $i && echo $i-$ver>>$modlist
-                        drush_en
-                elif [ $(grep -w $i $modlist 2>/dev/null) ]; then
-                        echo "$i found, updating."
-                        drush dl $i
-                else
-                        # No -dev copy found :( go go alpha beta!
-                        ver=$(drush pm-releases $i | sed -n 2p | awk '{print$2}')
-                        echo "Installing $i-$ver"
-                        drush dl $i-$ver && echo $i-$ver>>$modlist
-                        drush_en
-                fi
+               	# Check if versioned
+               	if [[ $i =~ '${i}-*' ]]; then 
+                       	echo "Installing $i"
+                       	drush dl $i && echo $i-$ver>>$modlist
+                       	drush_en
+               	elif [ $(grep -w $i $modlist 2>/dev/null) ]; then
+                       	echo "$i found, updating."
+                       	drush dl $i
+               	else
+                       	# No -dev copy found,. sniff sniff
+                       	ver=$(drush rl $i | sed -n 3p | awk '{print$1}')
+                       	echo "Installing $i-$ver"
+                       	drush dl $i-$ver && echo $i-$ver>>$modlist
+                       	drush_en
+               	fi
         fi
 done
-
