@@ -19,7 +19,7 @@ fi
 # Main loop
 for i in $@; do
         # Find the -dev if not then just download the top release version.
-        ver=$(drush rl $i | grep dev | head -n1 | awk '{print$1}')
+        ver=$(drush rl $i | grep dev | head -n1 | awk '{print$2}')
 
 	# Validate variable
         if [ $ver ]; then
@@ -34,7 +34,7 @@ for i in $@; do
                	fi
         else
                	# Check if versioned
-               	if [[ $i =~ '${i}-*' ]]; then 
+                if [[ $i =~ '${i}-*' ]]; then
                        	echo "Installing $i"
                        	drush dl $i && echo $i-$ver>>$modlist
                        	drush_en
@@ -43,7 +43,7 @@ for i in $@; do
                        	drush dl $i
                	else
                        	# No -dev copy found,. sniff sniff
-                       	ver=$(drush rl $i | sed -n 3p | awk '{print$1}')
+                        ver=$(drush rl $i | sed -n 3p | awk '{print$2}')
                        	echo "Installing $i-$ver"
                        	drush dl $i-$ver && echo $i-$ver>>$modlist
                        	drush_en
