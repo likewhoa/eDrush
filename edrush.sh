@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 modlist=../.drushpkgs # module list from running 'edrush foobar foo ...'
 
@@ -43,7 +43,7 @@ for i in $@; do
                        	drush dl $i
                	else
                        	# No -dev copy found,. sniff sniff
-                        ver=$(drush rl $i | sed -n 3p | awk '{print$2}')
+                        ver=$(drush rl $i | sed -n 2p | awk '{print$2}')
                        	echo "Installing $i-$ver"
                        	drush dl $i-$ver && echo $i-$ver>>$modlist
                        	drush_en
